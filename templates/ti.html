@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Info - {{ test.name }}</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: whitesmoke;
+        }
+
+        .center {
+            margin-left: 34%;
+        }
+
+        div.tests-details {
+            margin-top: 30px;
+            background: white;
+            border-top: 15px solid rgb(103, 58, 183);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        div.tests-details h2 {
+            padding-left: 34%;
+            margin-bottom: 15px;
+        }
+
+        div.tests-details p {
+            padding-left: 100px;
+            font-size: 18px;
+            font-family: monospace;
+        }
+
+        div.thisClass {
+            margin-top: 20px;
+        }
+
+        div.thisClass h2:nth-child(1) {
+            margin-left: 20px;
+        }
+
+        div.thisClass h2:nth-child(2) {
+            margin-left: 30%;
+            margin-top: 10px;
+        }
+
+
+        div.thisClass div.highest {
+            display: flex;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 25%;
+            background: linear-gradient(180deg, #1f1c1c, #000000);
+            height: 50px;
+            border-radius: 12px;
+            padding: 15px;
+            color: white;
+            transition: 1s;
+        }
+
+
+        div.thisClass div.highest div.percent {
+            box-shadow: inset 0px 10px black;
+            width: 60%;
+            border: 1px solid white;
+            height: 20px;
+            margin-left: 12%;
+            border-radius: 12px;
+            margin-right: 20px;
+        }
+
+        div.thisClass div.highest div.percent div.progress {
+            height: 100%;
+            background: linear-gradient(45deg, lightblue, navy);
+            border-radius: 12px;
+            animation: animate 1s ease-in-out 1 forwards;
+        }
+
+        @keyframes animate {
+            from {
+                width: 0px;
+            }
+        }
+
+        div.thisClass table {
+            margin-top: 15px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            width: 70%;
+            margin-left: 100px;
+            border: 1px solid black;
+        }
+
+        div.thisClass table thead {
+            color: white;
+            background: rgb(37, 207, 50);
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        div.thisClass table thead tr {
+            margin-left: 10px;
+            justify-content: space-around;
+            border-radius: 12px;
+            border: 1px solid #1e1e1e;
+        }
+
+        
+        a.link {
+            text-decoration: underline;
+            cursor: pointer;        
+            color: royalblue;
+            }
+    </style>
+</head>
+
+<body>
+    <h1 class='center'>Tests Info - {{ test.name }} :- </h1>
+    <div class="tests-details">
+        <h2>Details of Test</h2>
+        <p>Name: <a>{{ test.name }}</a></p>
+        <p>Password: {{ test.password }}</p>
+        <p>No Questions: {{ test.no_questions }}</p>
+        <p>Subject: {{ test.subject }}</p>
+        <p>Class: {{ test.class_name}}</p>
+    </div>
+
+    <div class="main-results">
+        {% if results == None %}
+        <h1 class='center' style='margin-top: 20px;'>Till now, no one has given the test</h1>
+        {% else %}
+        <div class='thisClass'>
+            <h2>Class {{ test.class_name}} A</h2>
+            {% if Aresults != None %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student's name</th>
+                        <th>Student's class</th>
+                        <th>Student's Section</th>
+                        <th>Student's marks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for Aresult in Aresults %}
+                    <tr>
+                        <td><a class='link'>{{ Aresult.student }}</a></td>
+                        <td> {{ Aresult.student_class }} </td>
+                        <td> {{ Aresult.student_section }} </td>
+                        <td> {{ Aresult.marks }} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h2>No one has given the test in {{ test.class_name }} A</h2>
+            {% endif %}
+        </div>
+
+        <div class='thisClass'>
+            <h2>Class {{ test.class_name}} B</h2>
+            {% if Bresults != None %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student's name</th>
+                        <th>Student's class</th>
+                        <th>Student's Section</th>
+                        <th>Student's marks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for Bresult in Bresults %}
+                    <tr>
+                        <td><a class='link'> {{ Bresult.student }} </a></td>
+                        <td> {{ Bresult.student_class }} </td>
+                        <td> {{ Bresult.student_section }} </td>
+                        <td> {{ Bresult.marks }} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h2>No one has given the test in {{ test.class_name }} B</h2>
+            {% endif %}
+        </div>
+
+        <div class='thisClass'>
+            <h2>Class {{ test.class_name}} C</h2>
+            {% if Cresults != None %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student's name</th>
+                        <th>Student's class</th>
+                        <th>Student's Section</th>
+                        <th>Student's marks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for Cresult in Cresults %}
+                    <tr>
+                        <td><a class='link'> {{ Cresult.student }} </a></td>
+                        <td> {{ Cresult.student_class }} </td>
+                        <td> {{ Cresult.student_section }} </td>
+                        <td> {{ Cresult.marks }} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h2>No one has given the test in {{ test.class_name }} C</h2>
+            {% endif %}
+        </div>
+
+        <div class='thisClass'>
+            <h2>Class {{ test.class_name}} D</h2>
+            {% if Dresults != None %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student's name</th>
+                        <th>Student's class</th>
+                        <th>Student's Section</th>
+                        <th>Student's marks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for Dresult in Dresults %}
+                    <tr>
+                        <td><a class='link'> {{ Dresult.student }} </a></td>
+                        <td> {{ Dresult.student_class }} </td>
+                        <td> {{ Dresult.student_section }} </td>
+                        <td> {{ Dresult.marks }} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h2>No one has given the test in {{ test.class_name }} D</h2>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="../static/jQuery.js"></script>
+    <script>
+        let allLinks = $('a.link');
+        allLinks.click(function(){
+        let thisTr = $($(this).parent());
+        let name = $(this).text();
+        let allTr = thisTr.siblings();
+        let class_name = allTr[0].innerText;
+        let section = allTr[1].innerText;
+        let marks = allTr[2].innerText;
+        let test_name = "{{ test.name }}";
+        let test_password = "{{ test.password }}";
+        name = name.trim();
+        $.ajax({
+            url: "/results/",
+            data: {
+                name: name,
+                class: class_name,
+                section: section,
+                marks: marks,
+                test_name: test_name,
+                test_password: test_password,
+                is_teacher: true
+            },
+            dataType: "JSON",
+            success: function (response) {
+                if(response.success) {
+                    window.location = '/results/'
+                }
+            }
+        });
+        });
+    </script>
+</body>
+
+</html>

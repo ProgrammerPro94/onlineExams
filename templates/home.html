@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: whitesmoke;
+            background-image: url('static/school.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .navbar {
+            margin-top: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(0deg, red, rgb(51, 51, 187))
+        }
+
+        .navlist {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .navcomp:nth-of-type(2),
+        .navcomp:nth-of-type(3) {
+            margin-left: 70px;
+        }
+
+        .navcomp:nth-of-type(1) {
+            margin-left: 20px;
+        }
+
+        .navcomp {
+            color: orange;
+            margin-top: 20px;
+            list-style: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .navcomp a {
+            text-decoration: none;
+            color: orange;
+        }
+
+        .container h1 {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .start {
+            margin-left: 30px;
+            background: white;
+            border: none;
+            outline: none;
+            box-shadow: 1px 4px 5px red, -3px -1px 12px yellow;
+            border-radius: 12px;
+            width: 200px;
+            height: 200px;
+        }
+
+        .start #plus {
+            text-align: center;
+            font-size: 150px;
+            margin-bottom: 0px;
+            padding-top: 8px;
+            background: -webkit-linear-gradient(0deg, red, yellow, blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .start #last {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        div.start:hover {
+            cursor: pointer;
+        }
+
+        div.tests-main {
+            background: white;
+            border-radius: 12px;
+            height: 100%;
+            box-shadow: 1px 3px 6px black, 2px 2px 5px black;
+        }
+
+        div.tests {
+            height: 100%;
+        }
+
+        div.tests-main h3 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 30px;
+        }
+
+        li.tests-li {
+            height: 100%;
+            margin-left: 40px;
+            margin-top: 20px;
+            padding-bottom: 20px;
+            font-size: 20px;
+        }
+
+        li.tests-li p {
+            font-size: 17px;
+            color: rgb(97, 152, 235);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class='navlist'>
+            <li class="navcomp"><a href='make_test/'>Make test</a></li>
+            <li class="navcomp"><a href='/start_test'>Start Test</a></li>
+            <li class='navcomp'><a href='/logout'>Logout</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Welcome {{ name }}</h1>
+
+        <div class="start">
+            <p id='plus'>+</p>
+            <p id='last'>Make a test</p>
+        </div>
+    </div>
+
+    <div class='tests-main'>
+        {% if tests == None %}
+        <h3>You have not made any tests</h3>
+        {% else %}
+        <h3> Your tests below :-</h3>
+        {% for test in tests %}
+        <div class='tests'>
+            <ol class='tests-ol'>
+                <li class='tests-li'><p class='main-text' style="text-decoration: none;
+                    font-size: 20px; cursor: pointer; color: black;">{{test.name}}<p> <p>Name: {{test.name}}</p>
+                    <p>password: {{test.password}}</p>
+                    <p style="
+                    margin-top: 10px;
+                    color: black;
+                    font-size: 12px;
+                    ">To start the test share the link below and name and password.
+                        Students will be asked to enter the name and password of test.
+                    </p>
+                    <a href='start_test/' style="font-size: 15px;"></a>
+                </li>
+            </ol>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+    </div>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script> -->
+    <script src='static/jQuery.js'></script>
+    <script>
+        let cont = document.getElementsByClassName('start')[0];
+        cont.addEventListener('click', function () {
+            window.location = 'make_test'
+        });
+
+        let linkTest = $('li.tests-li a');
+        linkTest.text("127.0.0.1:8000/" + linkTest.attr('href'));
+
+        let testMain = $('p.main-text');
+        testMain.click(function() {
+            let testLi = $(this).parent();
+            let name = testLi.children()[0].innerText;
+            let password = testLi.children()[3].innerText.slice(10);
+            $.ajax({
+                url: "test_info/",
+                data: {
+                    name: name,
+                    password: password
+                },
+                dataType: "JSON",
+                success: function (response) {
+                    if (response.isSuccess) {
+                        window.location = 'test_info/'
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

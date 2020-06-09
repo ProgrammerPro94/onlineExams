@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>This is home page</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url('../static/school.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        .box {
+            position: absolute;
+            top: 25%;
+            left: 35%;
+            height: max-content;
+            width: max-content;
+            padding: 40px;
+            padding-top: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+        }
+
+        .box h2 {
+            color: white;
+            margin-left: 25%;
+            margin-bottom: 30px;
+        }
+
+        .inputBox {
+            margin-left: 30px;
+        }
+
+        .inputBox input {
+            width: 250px;
+            height: 30px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            border: none;
+            outline: none;
+            background: transparent;
+            border-bottom: 1px solid #41c5c5;
+            color: whitesmoke;
+        }
+
+        .inputBox #user {
+            position: absolute;
+            top: 100px;
+            left: 70px;
+            color: white;
+            transition: .5s;
+        }
+
+        .inputBox #em {
+            position: absolute;
+            top: 160px;
+            left: 70px;
+            color: white;
+            transition: .5s;
+        }
+
+        .inputBox #pass {
+            position: absolute;
+            top: 220px;
+            left: 70px;
+            color: white;
+            transition: .5s;
+        }
+
+        .inputBox input:focus~label#user,
+        .inputBox input:valid~label#user {
+            top: 75px;
+            font-size: 12px;
+            color: lightskyblue;
+        }
+
+        .inputBox input:focus~label#pass,
+        .inputBox input:valid~label#pass {
+            top: 195px;
+            font-size: 12px;
+            color: lightskyblue;
+        }
+
+        .inputBox input:focus~label#em,
+        .inputBox input:valid~label#em {
+            top: 135px;
+            font-size: 12px;
+            color: lightskyblue;
+        }
+
+        div.selectBox {
+            margin-top: 15px;
+            padding-left: 30px;
+            margin-bottom: 20px;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        div.selectBox select {
+            width: 200px;
+            margin-top: 20px;
+            border: 1px solid black;
+            border-radius: 12px;
+        }
+
+        #sub {
+            width: 70px;
+            height: 25px;
+            background-color: #2281e7;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+        }
+
+        #sub:hover {
+            cursor: pointer;
+            background-color: #0a5bb1;
+        }
+
+        div.messages {
+            height: max-content;
+            display: table;
+            column-gap: 5px;
+        }
+
+        div.message-error {
+            height: 50px;
+            width: 350px;
+            border-radius: 12px;
+            padding-top: 10px;
+            text-align: center;
+            background-color: #f08c95;
+            border-color: #f5c6cb;
+            color: white;
+            font-family: monospace;
+            transition: 1s;
+        }
+
+        button.dismiss {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 25px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class='message-{{message.tags}}'>
+            {{ message }}
+            <button type="button" class='dismiss'>&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h1 style="margin-top: 20px;">St Xavier High school, patna</h1>
+    <div class="box">
+        <h2 style="margin-left: 15%;"> Online Test </h2>
+        <form action="/start_test/" method="GET">
+            {% csrf_token %}
+            <div class="inputBox">
+                <input type="text" name="username" id="username" autocomplete="off" required>
+                <label id='user'>Your name</label>
+            </div>
+            <div class="inputBox">
+                <input type="text" name="email" id="email" autocomplete="off" required>
+                <label id='em'>Name of test</label>
+            </div>
+            <div class="inputBox">
+                <input type="password" name="password" id="password" sautocomplete="off" required>
+                <label id='pass'>Password of Test</label>
+            </div>
+
+            <div class="selectBox">
+                <h4>Select your class</h4>
+                <select name='class' class='class'>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+
+                </select>
+            </div>
+
+            <div class="selectBox">
+                <h4>Select your Section</h4>
+                <select name='section' class='section'>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+
+            <div class="selectBox">
+                <h4>Select the Subject</h4>
+                <select name='subject' class='subject'>
+                    <option value="Hindi">Hindi</option>
+                    <option value="English">English</option>
+                    <option value="English LIT">English LIT</option>
+                    <option value="English Grammer">English Grammer</option>
+                    <option value="Sciece">Science</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Biology">Biology</option>
+                    <option value="S.S.T">S.S.T</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Civics">Civics</option>
+                    <option value="Sanskrit">E.V.S</option>
+                    <option value="Maths">Maths</option>
+                    <option value="Computer">Computer</option>
+                </select>
+            </div>
+            <button type="submit" id='sub'>Submit</button>
+        </form>
+    </div>
+
+    <script src='../static/jQuery.js'></script>
+    <script>
+        let btn = $('button.dismiss');
+        btn.click(function() {
+            let messageCont = $(this).parent();
+            let mainResult = $(this).parent().parent();
+            messageCont.remove();
+        })
+    </script>
+</body>
+
+</html>

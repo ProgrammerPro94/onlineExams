@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your results here</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: whitesmoke;
+        }
+
+        .center {
+            margin-left: 34%;
+        }
+
+        .head {
+            display: grid;
+            row-gap: 5px;
+        }
+
+        .head h2 {
+            margin-left: 20px;
+        }
+
+        .head p {
+            font-size: 100px;
+            margin-left: 34%;
+            background: -webkit-linear-gradient(90deg, tomato, royalblue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        div.questions {
+            display: grid;
+            row-gap: 20px;
+            width: 60%;
+            margin-left: 20%;
+            margin-top: 20px;
+        }
+
+        div.questions div.ques {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+        }
+
+        div.questions div.ques.correct {
+            border-top: 20px solid rgb(36, 207, 50);
+        }
+
+        div.questions div.ques.wrong {
+            border-top: 20px solid tomato;
+        }
+
+        div.questions div.ques span.signal.correct {
+            font-size: 40px;
+            color: rgb(46, 230, 60);
+        }
+
+        div.questions div.ques span.signal.wrong {
+            font-size: 40px;
+            color: tomato;
+        }
+
+        div.questions div.ques ol {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class='center' style='margin-top: 20px;'>Your results are ready</h1>
+    <div class="head">
+        <h2>Your score :-</h2>
+        <p>{{ marks }}/{{ questions | length }}</p>
+    </div>
+
+    <div class="questions">
+        {% for question in questions %}
+        <div class='ques'>
+            <h2>{{ question.text }}
+            <span class='signal'></span>
+            </h2>
+            <ol>
+                {% for option in question.options %}
+                <li>{{ option }}</li>
+                {% endfor %}
+            </ol>
+            <p class='correct-mark'></p>
+            <p class='your-mark'>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script src='../static/jQuery.js'></script>
+    <script>
+        function removeAll(str, sub, new1){
+            while (str.includes(sub)) {
+                str = str.replace(sub, new1)
+            }
+            return str
+        }
+        let analysis = "{{ analysis }}";
+        analysis = removeAll(analysis, 'T', 't');
+        analysis = removeAll(analysis, 'F', 'f');
+        analysis = JSON.parse(analysis);
+        let correct = "{{ correct }}";
+        correct = removeAll(correct, "'", '');
+        correct = JSON.parse(correct);
+        let answers = "{{ given }}";
+        answers = removeAll(answers, "''", '');
+        answers = JSON.parse(answers);
+
+        let questionBox = $('div.questions');
+        for(let i = 0;i < analysis.length;i++ ){
+            let thisQuesBox = $(questionBox.children()[i]);
+            if (analysis[i]){
+            thisQuesBox.addClass('correct');
+            let spanMark = $($(thisQuesBox.children()[0]).children()[0]);
+            spanMark.addClass('correct');
+            spanMark.text('✓');
+            }
+            else {
+                thisQuesBox.addClass('wrong');
+                let spanMark = $($(thisQuesBox.children()[0]).children()[0]);
+                spanMark.addClass('wrong');
+                spanMark.text('✗');
+            }
+            let correctP = thisQuesBox.children('p.correct-mark');
+            let answersP = thisQuesBox.children('p.your-mark');
+            correctP.text("Correct Answer: " + correct[i]);
+            answersP.text("Given Answer: " + answers[i]);
+        }
+    </script>
+</body>
+</html>

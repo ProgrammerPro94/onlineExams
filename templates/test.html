@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: whitesmoke;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        div.instructions {
+            margin-top: 20px;
+            border-top: 15px solid rgb(107, 58, 198);
+            border-radius: 15px;
+            padding: 50px;
+            background: white;
+        }
+
+        div.instructions p {
+            text-align: center;
+            font-size: 20px;
+            font-family: sans-serif;
+            margin-bottom: 10px;
+        }
+
+        div.instructions li {
+            padding-bottom: 5px;
+            font-family: monospace;
+        }
+
+        div.questions-box {
+            margin: 40px;
+            display: grid;
+            row-gap: 30px;
+            width: 60%;
+        }
+
+        div.ques {
+            background: white;
+            border-top: 15px solid rgb(107, 58, 198);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+        }
+
+        div.ques h2 {
+            margin-bottom: 10px;
+        }
+
+        div.options {
+            display: grid;
+            row-gap: 10px;
+        }
+
+        div.option {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+        div.option input[type='radio'] {
+            margin-right: 10px;
+        }
+
+        div.questions-box button {
+            width: 120px;
+            height: 35px;
+            border-radius: 12px;
+            background: rgb(107, 58, 198);
+            border: none;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        div.questions-box button:hover {
+            cursor: pointer;
+            width: 140px;
+            height: 45px;
+            font-size: 19px;
+            color: white;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to the online test of {{ test.subject }}</h1>
+    <div class="instructions">
+        <p>Here are the instructions</p>
+        <ul>
+            <li>The use of desktop or laptop is advised for better experience.</li>
+            <li>All questions are compulsory.</li>
+            <li>Each question is a MCQ and contains 1 mark each.</li>
+            <li>There are total {{ test.no_questions }} question in this test.</li>
+            <li>1 mark will be cut for each question skipped or each wrongly answered question.</li>
+        </ul>
+    </div>
+
+    <div class="questions-box">
+        {% for question in questions %}
+        <div class="ques">
+            <h2> {{question.text}} </h2>
+            <div class="options">
+                {% for option in question.options %}
+                <div class="option">
+                    <input type='radio' class='options' name="option{{ question }}">
+                    <p class='option{{ question }}' role='app'>{{ option }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <button>Submit Test</button>
+    </div>
+
+    <script src="../static/jQuery.js"></script>
+    <script>
+        function extractData(attr) {
+            let location = window.location.search;
+            let allAttr = location.split('&');
+            let data = ""
+            let data1 = ""
+            allAttr.forEach(attr1 => {
+                if (attr1.startsWith(attr)) {
+                    data = attr1.split('=')[1];
+                    data = data.split('+');
+                    data.forEach(sub => {
+                        data1 += sub + ' '
+                    });
+
+                }
+            });
+            return data1
+        };
+
+        function seperateByAttr(elems, attr) {
+            let seperated = {}
+            elems.each(function (index, elem) {
+                elem = $(elem);
+                let nameClass = elem.attr(attr);
+                if (seperated[`${nameClass}`] == undefined) {
+                    seperated[`${nameClass}`] = [elem];
+                } else {
+                    seperated[`${nameClass}`].push(elem);
+                }
+            });
+            return seperated
+        }
+
+
+
+
+        let subBut = $('div.questions-box button');
+        subBut.click(function () {
+            // Getting Information
+            const name = extractData('username');
+            const section = extractData('section');
+            // Getting answers
+            let _allOption = seperateByAttr($('input[type="radio"]'), 'name');
+            let allOption = []
+            for (const key in _allOption) {
+                if (_allOption.hasOwnProperty(key)) {
+                    let elem = $(_allOption[key]);
+                    allOption.push(elem);
+                };
+            };
+
+            let indexSelected = [];
+            allOption.forEach(options => {
+                let noSelected = true;
+                options.each(function (index, option) {
+                    option = option[0];
+                    if (option.checked) {
+                        indexSelected.push(index + 1);
+                        noSelected = false;
+                    };
+                    if (noSelected && index + 1 === options.length) {
+                        indexSelected.push(null);
+                    }
+                })
+            });
+
+
+            $.ajax({
+                url: "/results/",
+                data: {
+                    name: name,
+                    section: section,
+                    index: indexSelected
+                },
+                dataType: "JSON",
+                success: function (response) {
+                    if(response.success) {
+                        window.location = '/results/'
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
