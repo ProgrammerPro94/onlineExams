@@ -1,5 +1,4 @@
 from django.db import models
-from django_mysql.models import ListCharField
 
 # Create your models here.
 class Teacher(models.Model):

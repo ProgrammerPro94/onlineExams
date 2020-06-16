@@ -24,6 +24,7 @@ def home(request):
 
         return render(request, 'home.html', context)
 
+
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -42,6 +43,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('/login/')
+
 
 def start_test(request):
     global test_aval
@@ -135,8 +137,6 @@ def test_info(request):
         c_results = None 
     if len(d_results) == 0:
         d_results = None  
-
-    print(d_results)
 
     context = {
         'test': test_filter,
@@ -267,3 +267,14 @@ def result_display(request):
     except:
         return redirect('/')
 
+
+def delete_test(request):
+    if request.is_ajax:
+        name = request.GET.get('name')
+        password = request.GET.get('password')
+        test_delete = Test.objects.filter(name=name, password=password)[0]
+        test_delete.delete()
+        return JsonResponse({
+            'success': True
+        })
+    return redirect('/')

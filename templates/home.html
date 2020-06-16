@@ -90,13 +90,8 @@
         }
 
         div.tests-main {
-            background: white;
-            border-radius: 12px;
-            height: 100%;
-            box-shadow: 1px 3px 6px black, 2px 2px 5px black;
-        }
-
-        div.tests {
+            display: grid;
+            row-gap: 30px;
             height: 100%;
         }
 
@@ -104,6 +99,14 @@
             text-align: center;
             margin-top: 20px;
             font-size: 30px;
+        }
+
+        div.tests {
+            margin-left: 34%;
+            background: white;
+            padding: 40px;
+            width: 40%;
+            border-radius: 12px;
         }
 
         li.tests-li {
@@ -117,6 +120,16 @@
         li.tests-li p {
             font-size: 17px;
             color: rgb(97, 152, 235);
+        }
+
+        div.upper {
+            height: 500px;
+        }
+
+        div.upper img {
+            height: 100%;
+            width: 100%;
+            z-index: -1;
         }
     </style>
 </head>
@@ -145,20 +158,15 @@
         <h3> Your tests below :-</h3>
         {% for test in tests %}
         <div class='tests'>
-            <ol class='tests-ol'>
-                <li class='tests-li'><p class='main-text' style="text-decoration: none;
-                    font-size: 20px; cursor: pointer; color: black;">{{test.name}}<p> <p>Name: {{test.name}}</p>
-                    <p>password: {{test.password}}</p>
-                    <p style="
-                    margin-top: 10px;
-                    color: black;
-                    font-size: 12px;
-                    ">To start the test share the link below and name and password.
-                        Students will be asked to enter the name and password of test.
-                    </p>
-                    <a href='start_test/' style="font-size: 15px;"></a>
-                </li>
+            <h1>{{ test.name }}</p></h1>
+            <ol>
+                <li><p class='main-text'>Name: {{ test.name }}</p></li>
+                <li>Password: {{ test.password }}</li>
+                <li>No Questions: {{ test.no_questions }}</li>
             </ol>
+            <a href='delete_test/'>Delete Test</a>
+            <p>Share the link and name and password of test to start it</p>
+            <a href='start_test/'>127.0.0.1:8000/start_test/</a>
         </div>
         {% endfor %}
         {% endif %}
@@ -168,7 +176,31 @@
     <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script> -->
     <script src='static/jQuery.js'></script>
+    <script src=""></script>
     <script>
+        // For deleting
+        let deleteText = $('a[href="delete_test/"]');
+        deleteText.click(function(e) {
+            e.preventDefault();
+            let textOl = $(this).siblings()[1];
+            let nameTest = $($(textOl).children()[0]).children()[0].innerText.slice(6);
+            let passwordTest = $(textOl).children()[1].innerText.slice(10);
+            $.ajax({
+                url: 'delete_test/',
+                data: {
+                    name: nameTest,
+                    password: passwordTest
+                },
+                dataType: 'JSON',
+                success: function(response){
+                    if (response.success) {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+
+        // For test Info
         let cont = document.getElementsByClassName('start')[0];
         cont.addEventListener('click', function () {
             window.location = 'make_test'
@@ -179,9 +211,9 @@
 
         let testMain = $('p.main-text');
         testMain.click(function() {
-            let testLi = $(this).parent();
-            let name = testLi.children()[0].innerText;
-            let password = testLi.children()[3].innerText.slice(10);
+            let testLi = $($(this).parents()[1]);
+            let name = testLi.children()[0].innerText.slice(6);
+            let password = testLi.children()[1].innerText.slice(10);
             $.ajax({
                 url: "test_info/",
                 data: {
