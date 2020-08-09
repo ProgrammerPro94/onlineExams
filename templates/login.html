@@ -20,9 +20,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-image: url('../static/school.jpg');
-            background-repeat: no-repeat;
-            background-size: 100%, 100%;
         }
 
 
@@ -115,6 +112,15 @@
             cursor: pointer;
             background: transparent;
         }
+
+        img.main-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        }
     </style>
 
 </head>
@@ -133,6 +139,7 @@
     {% endfor %}
 </ul>
 {% endif %}
+<img src="../static/school.jpg" class="main-image">
     <h1 style="margin-top: 40px;">St Xavier High school, patna</h1>
     <div class="box">
         <h2 id='head'> Sign in Here </h2>
